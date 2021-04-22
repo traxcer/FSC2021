@@ -66,25 +66,25 @@ int pid_hijo2;
 int pid_padre;
 
 void manejador_padreSIGUSR1(int sig){
+    signal(SIGUSR1,manejador_padreSIGUSR1);
     char msg[T];    
     sprintf(msg,"Soy el proceso padre con PID = %d: ya voy!.\n",getpid());
     write(1,msg,strlen(msg));
-    signal(SIGUSR1,manejador_padreSIGUSR1);
     kill(pid_hijo2, SIGUSR1); //llama al hijo2
 } 
 void manejador_hijo2SIGUSR1(int sig){
+    signal(SIGUSR1,manejador_hijo2SIGUSR1);
     char msg[T];    
     sprintf(msg,"Soy el proceso hijo2 con pid = %d: ya estoy despierto.\n",getpid());
     write(1,msg,strlen(msg));
-    signal(SIGUSR1,manejador_hijo2SIGUSR1);
 }   
 
 void manejador_Alarma(int sig){
     //Maneja la alarma del hijo1 cada 2 segundos
+    signal(SIGALRM,manejador_Alarma); //armo la alarma del temporizador de nuevo
     char msg[T];    
     sprintf(msg,"Soy proceso hijo1 con PID=%d: papá, despierta a mi hermano\n",getpid());
     write(1,msg,strlen(msg));
-    signal(SIGALRM,manejador_Alarma); //armo la alarma del temporizador de nuevo
     kill(pid_padre, SIGUSR1); //llama al padre
 }
 
