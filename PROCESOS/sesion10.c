@@ -131,9 +131,7 @@ int pid_padre = getpid(); //Aqui guardo el pid del padre
         //signal(SIGUSR1,manejador_SIGUSR1); //armo el manejador
         signal(SIGUSR1,manejador_padreSIGUSR1);
         printf("Soy el padre y mi pid es: %d\n",pid_padre);
-        wait(0);
-        wait(0);
-        printf("Soy el padre y mi se me han muerto mis dos hijos");
+        while(1);
     }
 
 }
