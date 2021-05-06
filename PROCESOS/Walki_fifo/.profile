@@ -1,0 +1,3 @@
+LOGNAME="Eloy"
+export LOGNAME
+
