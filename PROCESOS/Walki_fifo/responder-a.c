@@ -20,7 +20,7 @@ char mensaje[MAX];
 int main(int argc, char * argv[]){
     char *logname;
     char *getenv();
-    void fin_de_transmision();
+    void fin_de_transmision(int sig);
 
     if (argc !=2){ //Comprobamos los parametros del programa
         printf("Forma de uso: %s usuario \n",argv[0]);
@@ -59,15 +59,11 @@ int main(int argc, char * argv[]){
     close (fifo_21);
     exit(0);
 }
-
-
-void fin_de_transmision(int sig){
-    sprintf(mensaje,"corto\n");
-    write(fifo_21,mensaje,strlen(mensaje)+1);
-    printf("FIN DE TRANSMISION.\n");
-    close (fifo_12);
-    close (fifo_21);
-    exit(0);
-}
-
-}
+    void fin_de_transmision(int sig){
+        sprintf(mensaje,"corto\n");
+        write(fifo_21,mensaje,strlen(mensaje)+1);
+        printf("FIN DE TRANSMISION.\n");
+        close (fifo_12);
+        close (fifo_21);
+        exit(0);
+    }
