@@ -19,7 +19,7 @@ int main(int argc, char * argv[]){
     void fin_de_trasmision();
 
     if (argc !=2){
-        perror("Forma de uso: %s usuario \n",argv[0]);
+        printf("Forma de uso: %s usuario \n",argv[0]);
         exit(-1);
     }
 
