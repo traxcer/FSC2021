@@ -40,6 +40,7 @@ int main(int argc, char * argv[]){
         perror(nombre_fifo_21);
         exit(-1);
     }
+    
     signal(SIGINT, fin_de_transmision);//Armamos manejador para Ctrl+C salir
 
     do{ //Bucle de recepcion de mensajes
