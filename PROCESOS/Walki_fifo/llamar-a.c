@@ -45,7 +45,7 @@ int main(int argc, char * argv[]){
 
     unlink (nombre_fifo_12);
     unlink (nombre_fifo_21);
-    umask (~666); //Permisos por defecto para este proceso
+    umask (0); //Permisos por defecto para este proceso
     if (mkfifo(nombre_fifo_12,0666)==-1){
         perror("fifo");
         exit(-1);    

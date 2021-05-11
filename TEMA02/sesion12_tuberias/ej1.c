@@ -1,10 +1,8 @@
 /* 
-Escriba un programa en C que reciba como argumento una lista de ficheros de texto, 
-y que filtre su contenido de usando para ello dos procesos, padre e hijo, comunicados 
-por una pipe. 
-El padre se encarga de abrir los ficheros, aplicar el primer filtro, guardar una copia 
-modificada del fichero con el contenido filtrado y pasarlo al hijo para que aplique el 
-segundo filtro. 
+ 
+
+
+
 El hijo, por su parte, recibe la información del padre y, análogamente, filtra el 
 contenido que le llega y escribe una copia modificada con el contenido filtrado. 
 El filtro que aplica cada proceso es el siguiente:
@@ -55,7 +53,32 @@ a|**|b
 */
 
 #include <stdio.h>
-
+/*
+Escriba un programa en C que reciba como argumento una lista de ficheros de texto, 
+y que filtre su contenido de usando para ello dos procesos, padre e hijo, comunicados 
+por una pipe.
+*/
 int main(int argc, char * argv[]){
+    if (argv<3){
+        fprint("Uso: %d <listaFicheros>",argv[0]);
+        exit (-1);
+    }
+
+    size_t pid_id;
+    
+
+    if (pid_id=(fork())==-1){
+        perror("fork");
+        exit(-1);
+    }
+    if(pid_id==0){ // Estamos en hijo
+
+    } else { // Estamos en el padre
+        fd= open(argv[1])
+    }
+/*El padre se encarga de abrir los ficheros, aplicar el primer filtro, guardar una copia 
+modificada del fichero con el contenido filtrado y pasarlo al hijo para que aplique el 
+segundo filtro.*/
+
     
 }
