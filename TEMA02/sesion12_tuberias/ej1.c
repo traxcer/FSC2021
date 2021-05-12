@@ -16,14 +16,6 @@ El nombre de los ficheros temporales que escribe cada proceso se generará usand
 recibido como argumento, y concatenándole “.f1” o “.f2” en el proceso padre e hijo, 
 respectivamente. Es decir:
 
-Padre:
-Nombre origen (que llega como argumento): “data.txt”
-Nombre destino (con el contenido filtrado en el padre): “data.txt.f1”
-
-Hijo
-Nombre origen (que llega como argumento): “data.txt”
-Nombre destino (con el contenido filtrado en el padre y en el hijo): “data.txt.f2”
-
 Notas:
 Nótese que tendrá que implementar algún mecanismo que permita distinguir al proceso hijo cuándo termina un fichero y empieza el siguiente.
 El hijo ha de finalizar su ejecución cuando el padre se desconecta de la pipe. En ningún caso deberá utilizar la información contenida en argc/argv a tal efecto (sólo para generar el nombre de los ficheros de salida).
