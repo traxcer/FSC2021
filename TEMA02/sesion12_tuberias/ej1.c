@@ -52,6 +52,11 @@ a|**|b
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <ctype.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <string.h>
+#include <sys/wait.h>
 
 # define T 255
 
@@ -61,52 +66,69 @@ y que filtre su contenido de usando para ello dos procesos, padre e hijo, comuni
 por una pipe.
 */
 int main(int argc, char * argv[]){
-    if (argv<3){
-        fprint("Uso: %d <listaFicheros>",argv[0]);
+    if (argc<2){
+        printf("Uso: %s <listaFicheros>\n",argv[0]);
         exit (-1);
     }
+    char buffer[T];
+    char filtro[T];
+    char fichero[25];
+    int leidos;
+    int escritos;
     size_t pid_id;
     int tuberia[2];
     if (pipe(tuberia)==-1){ //abro tuberia
         perror("pipe: ");
         exit (-1);
     }
-    if (pid_id=(fork())==-1){
+    if ((pid_id=(fork()))==-1){
         perror("fork");
         exit(-1);
     }
     if(pid_id==0){ // Estamos en hijo
-
-    } else { // Estamos en el padre
-    char buffer[T];
-    char filtro1[T];
-    int leidos;
-        for(int i=0;i<argc-1;i++){ //bucle que lee la lista de ficheros
-            int fd= open(argv[i],O_RDONLY);
-            if (fd==-1){
-                perror("open fichero");
+        close (tuberia[1]); //cierra tuberia que no usa
+        while ((read(tuberia[0],fichero,25))==0){
+            printf("Proceso %d Receptor, esperando mensaje...\n",getpid());
+            }
+            printf("Proceso %d Receptor, mensaje: %s\n",getpid(),fichero);
+            close (tuberia[0]);
+            exit(0);
+    } 
+    else { // Estamos en el padre
+        close (tuberia[0]); //cierra tuberia que no usa
+        for(int i=1;i<argc;i++){ //bucle que lee la lista de ficheros
+            int fdl= open(argv[i],O_RDONLY);
+            if (fdl==-1){
+                perror("Error abriendo el fichero");
                 exit(-1);
             }
-            leidos=read(fd,buffer,T);
-            while (leidos>0){
+            sprintf(fichero,"%s.f1",argv[i]);
+            int fde= open(fichero,O_WRONLY|O_CREAT, 0666);
+            if (fde==-1){
+                perror("Error creando el fichero");
+                exit(-1);
+            }
+            leidos=read(fdl,buffer,T);
+            do {
                 //pasa a minusculas lo leido
                 for (int i=0;i<leidos+1;i++)
-                    filtro1[i]
-                buffer[leidos] = '\0';
-        printf("%s",buffer);
-        leidos =read(fd,buffer,T);
-        }
-    close(fd);
-/*      El filtro que aplica el proceso padre:
-        Convierte todas los caracteres a minúscula (ver la función tolower() 
-        en el manual)
-*/
+                    filtro[i]=tolower((unsigned char)buffer[i]);
+                escritos=write(fde,filtro,leidos);
+                if (escritos<0){
+                    perror("Error write padre");
+                    exit(-1);
+                }
+            } while ((leidos=read(fdl,buffer,T))>0);
+        close(fdl);
+        close(fde);
+        write(tuberia[1],fichero,strlen(fichero)); //manda el fichero al hijo
 
-        }   
+        }   //cierra for de ficheros
+    wait(0); //Espera que termine el hijo
     }
+}
 /*El padre se encarga de abrir los ficheros, aplicar el primer filtro, guardar una copia 
 modificada del fichero con el contenido filtrado y pasarlo al hijo para que aplique el 
 segundo filtro.*/
 
     
-}
