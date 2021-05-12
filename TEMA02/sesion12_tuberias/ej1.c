@@ -91,8 +91,11 @@ int main(int argc, char * argv[]){
             printf("Proceso %d Receptor, esperando mensaje...\n",getpid());
             }
             printf("Proceso %d Receptor, mensaje: %s\n",getpid(),fichero);
-            close (tuberia[0]);
-            exit(0);
+            if (strcmp(fichero,"fin")){
+                printf("Llego el mensaje de fin...Termino el hijo\n");
+                close (tuberia[0]);
+                exit(0);
+            }
     } 
     else { // Estamos en el padre
         close (tuberia[0]); //cierra tuberia que no usa
@@ -123,7 +126,8 @@ int main(int argc, char * argv[]){
         close(fde);
         write(tuberia[1],fichero,strlen(fichero)); //manda el fichero al hijo
 
-        }   //cierra for de ficheros
+        }   //fin bucle for de ficheros
+        write(tuberia[1],"fin",3); //manda el fichero al hijo
     wait(0); //Espera que termine el hijo
     }
 }
