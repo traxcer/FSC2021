@@ -24,8 +24,8 @@ int main() {
         perror("no se ha podido abrir el socket") ;
         exit(1) ;
     }
-    /* se pone a cero la direccion del servidor */
-    memset(&direccionServidor, 0, sizeof(direccionServidor));
+    
+    memset(&direccionServidor, 0, sizeof(direccionServidor));/* se pone a cero la direccion del servidor */
     direccionServidor.sin_family = AF_INET;
     direccionServidor.sin_addr.s_addr = INADDR_ANY;
     direccionServidor.sin_port = htons(atoi(puerto_tcp));
