@@ -49,15 +49,14 @@ int main(){
             perror("close pipe");
             exit(-1);
         }
-        if((write(p[1],"Hola!\n",6))<0){
+        if((write(p[1],"Hola!\n",6))!=6){
             perror("write");
             exit(-1);
         }
-     
-        wait(0); //espera al hijo;
         if ((close (p[1]))<0){
             perror("close pipe");
             exit(-1);
         }
+        wait(0); //espera al hijo;
     }
 }
