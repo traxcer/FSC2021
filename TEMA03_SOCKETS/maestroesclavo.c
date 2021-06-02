@@ -13,8 +13,8 @@
 #define RESPUESTA_ERR 1
 #define SUM 0
 #define RES 1
-#define MUL 3
-#define DIV 4
+#define MUL 2
+#define DIV 3
 
 struct DatosEsclavo{
     int pipe_padre_a_hijo[2];
@@ -28,21 +28,22 @@ int get_max_fd(int actual, int nuevo){
         return nuevo;
 }
 
-int traduce_a_binario(char *input,char*output){
+int traduce_a_binario(char *input,uint16_t*output){
     //int resultado=0;
-    if (strncmp(input,"SUM",3))
+    output[0]=6; //mal
+    if (!strncmp(input,"SUM",3))
         output[0]=SUM;
-    else if(!strncmp(input,"RES",3))
+    if(!strncmp(input,"RES",3))
         output[0]=RES;
-    else if(!strncmp(input,"MUL",3))
+    if(!strncmp(input,"MUL",3))
         output[0]=MUL;
-    else if(!strncmp(input,"DIV",3))
+    if(!strncmp(input,"DIV",3))
         output[0]=DIV;
-    else
+    if (output[0]==6)
         return -1;
     
-    char * posicion_espacio1=strstr(input," ");
-    char * posicion_espacio2=strstr(posicion_espacio1+1," ");
+    char * posicion_espacio1 = strstr(input," ");
+    char * posicion_espacio2 = strstr(posicion_espacio1+1," ");
     if (posicion_espacio1==NULL || posicion_espacio2==NULL)
         return -1;
     
@@ -84,7 +85,7 @@ int main(){
         while(1){  //Bucle sin fin
             int n;
             //int proximo_hijo=0;
-            memcpy (&cjto_modificado,&cjto_descriptores,sizeof(fd_set));
+            memcpy (&cjto_modificado,&cjto_descriptores,sizeof(fd_set)); //copia del registro al modificado
             int resultado=select(max_descriptor+1,&cjto_modificado,NULL,NULL,NULL);
             if (resultado <0){
                 perror("select");
@@ -102,29 +103,42 @@ int main(){
             if(FD_ISSET(0,&cjto_modificado)){ //hay datos del teclado
                 n= read(0,buffer,TAM_BUFFER);
                 if(n>0){
-                    buffer[n-1]='\0';
+                    printf("Leidos n=%d y en el buffer\n", n);
+                    buffer[n]='\0'; //convierte lo leido en cadena
                     printf("buffer inicial: %s\n", buffer);
-                    char out[3];
-                    if(traduce_a_binario(buffer,out)<0)
+                    uint16_t out[3];
+                    int restra=traduce_a_binario(buffer,out);
+                    printf("restra=%d out[0]=%d  out[1]=%d  out[2]=%d  ", restra,out[0],out[1],out[2]);
+                    if(restra<0){
+                        printf("No ha traducido, sale del bucle");
                         continue; //sale del bucle
-                    printf("out inicial: %s\n", out);
-                    write(esclavo.pipe_padre_a_hijo[1],out,3);
+                    }
+                    if (write(esclavo.pipe_padre_a_hijo[1],out,3)<0){
+                        perror("writepipe");
+                        exit(-1);
+                    };
                 }
                 printf("operación:>\n");
             }
         } //fin while
     } //fin del padre
     else if (pid==0){  //proceso del hijo
+        int lee;
+        uint16_t entra[3];
         uint16_t resultado;
         uint8_t code;
         while(1){
             code= RESPUESTA_OK;
-            read(esclavo.pipe_padre_a_hijo[0],buffer,1);
-            switch (buffer[0])
+            if ((lee=read(esclavo.pipe_padre_a_hijo[0],entra,3))<0){
+                perror("readpipe");
+                exit(-1);
+            }
+            printf("Lee %d, entra[1]=%d entra[0]=%d entra[2]=%d\n",lee, entra[1],entra[0],entra[2]);
+            switch (entra[0])
             {
             case SUM/* constant-expression */:
                 /* code */
-                resultado= buffer[1]+buffer[2];
+                resultado= entra[1]+entra[2];
                 break;
             case RES/* constant-expression */:
                 /* code */
