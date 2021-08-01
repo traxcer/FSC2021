@@ -24,6 +24,8 @@ Prototipo: void * malloc(size_t tamaño);
 *Si el tamaño es 0, devuelve NULL o un valor unico de puntero que 
  posteriormente puede ser liberado por free().
 *En caso de error tambien devuelve NULL
+NOTAS: Se usa asignación optimista, no se garantiza que la memoria
+esté disponible.
 ==================================================================
 Prototipo: void free(void *puntero);
 ==================================================================
