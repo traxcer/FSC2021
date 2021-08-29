@@ -1,0 +1,4 @@
+Hola esto es una prueba
+para la lectura de un 
+fichero con la lectura protegida
+contra la señales

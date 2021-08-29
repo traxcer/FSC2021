@@ -1,0 +1,20 @@
+ENVIOS Y RECEPCIONES PROTEGIDAS (ALGORITMO)
+
+    r= read(fd, buf, len);
+    Resultados:
+        * r=len, lee todo lo esperado
+        * r=0, final de fichero, buf no modificado
+        * 0<r<len, lee pero no todo
+              -buf tiene lo leido
+              -se ha llegado al final del fichero antes de leer len bytes
+               ========================================= 
+              -ha llegado una señal y lo ha interrumpido ****
+               =========================================
+              -hay menos de len datos disponibles para lectura
+                **** Solución volver a ejecutar read,
+                     actualizando buf y len
+        * r=-1, y errno vale EINTR
+              -ha llegado una señal antes de poder leer nada
+              -buf no se modifica
+                **** Solución volver a ejecutar read
+

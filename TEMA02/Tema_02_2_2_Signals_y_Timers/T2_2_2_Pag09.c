@@ -10,10 +10,19 @@ void m(int signo){
     exit (1);
 }
 
+void alarma(int signo){
+    char texto[50];
+    int n= sprintf(texto,"Alarma (señal %d) antes de capturar una señal\n", signo);
+    write(1,texto,n);
+    exit (1);
+}
+
 int main(){
     
     signal(SIGUSR1,m); //registra el manejador, nunca dispara
-    write(1,"Esperando a que llegue una señal...\n",37);
+    signal(SIGALRM,alarma);
+    alarm(10);
+    write(1,"Esperando 10 segundos a que llegue una señal...\n",49);
     pause(); //proceso dormido hasta que llegue una señal
 }
 
