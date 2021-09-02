@@ -26,15 +26,3 @@ ssize_t read_n(int fd, char *buf, ssize_t n){ //funcion read_n()
     else
         return leido;    
 }    
-
-    int main(){
-        int fd;
-        char b[250];
-        if((fd=open("text.txt",O_RDONLY))<0){
-            perror("open");
-            return -1;
-        }
-        ssize_t leo = read_n(fd,b,250);
-        printf("Leido %ld:\n%s\n",leo,b);
-
-    }
