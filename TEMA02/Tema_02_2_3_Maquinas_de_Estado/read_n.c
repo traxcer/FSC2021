@@ -5,7 +5,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
-ssize_t read_n(int fd, char *buf, ssize_t n){ //funcion read_n()
+ssize_t read_n(int fd, void *buf, size_t n){ //funcion read_n()
     ssize_t a_leer = n; //lo que queremos leer
     ssize_t total_leido = 0 ; //por ahora no ha leido nada
     ssize_t leido=0; //leido en una tacada
