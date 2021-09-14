@@ -2,8 +2,8 @@
     "tasks": [
         {
             "type": "cppbuild",
-            "label": "C/C++: gcc-9 compilar archivo activo",
-            "command": "/usr/bin/gcc-9",
+            "label": "C/C++: gcc compilar archivo activo",
+            "command": "/usr/bin/gcc",
             "args": [
                 "-g",
                 "${file}",
