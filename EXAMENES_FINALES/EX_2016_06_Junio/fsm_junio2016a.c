@@ -45,45 +45,45 @@ int main(){
   while(!fin){
     int evento = espera_evento();
     switch(estado){
-      case LISTO:
-	if(evento == MANDA_MENSAJE){
-	  valor.tv_sec = 1;
-	  valor.tv_usec = 500000;
-	  timerval.it_value = valor;
-	  setitimer(ITIMER_REAL, &timerval, NULL);
-	  estado = RETRASO_TX;
-	}else{
-	  printf("LISTO: evento no esperado\n");
-	}
-	break;
-      case RETRASO_TX:
-	if(evento == TIMEOUT){
-	  printf("RTS activa\n");
-	  valor.tv_sec = 3;
-	  valor.tv_usec = 300000;
-	  timerval.it_value = valor;
-	  setitimer(ITIMER_REAL, &timerval, NULL);
-	  estado = ESPERA_CTS;
-	}else{
-	  printf("RETRASO_TX: evento no esperado\n");
-	}
-	break;
-      case ESPERA_CTS:
-	if(evento == CTS){
-	  valor.tv_sec = 0;
-	  valor.tv_usec = 0;
-	  timerval.it_value = valor;
-	  setitimer(ITIMER_REAL, &timerval, NULL);
-	  printf("CTS activa\n");
-	  estado = ESPERA_TX_FINISH;
-	}else if(evento == TIMEOUT){
-	  printf("Error: CTS no activa\n");
-	  fin = 1;
-	}else{
-	  printf("ESPERA_CTS: evento no esperado\n");
-	}
-	break;
-      case ESPERA_TX_FINISH:
+      	case LISTO:
+			if(evento == MANDA_MENSAJE){
+				valor.tv_sec = 1;
+	  			valor.tv_usec = 500000;
+				timerval.it_value = valor;
+	  			setitimer(ITIMER_REAL, &timerval, NULL);
+	  			estado = RETRASO_TX;
+			}else{
+	  			printf("LISTO: evento no esperado\n");
+			}
+		break;
+      	case RETRASO_TX:
+			if(evento == TIMEOUT){
+	  			printf("RTS activa\n");
+	  			valor.tv_sec = 3;
+	  			valor.tv_usec = 300000;
+	  			timerval.it_value = valor;
+	  			setitimer(ITIMER_REAL, &timerval, NULL);
+	  			estado = ESPERA_CTS;
+			}else{
+	  			printf("RETRASO_TX: evento no esperado\n");
+			}
+		break;
+      	case ESPERA_CTS:
+			if(evento == CTS){
+	  			valor.tv_sec = 0;
+	  			valor.tv_usec = 0;
+	  			timerval.it_value = valor;
+	  			setitimer(ITIMER_REAL, &timerval, NULL);
+	  			printf("CTS activa\n");
+	  			estado = ESPERA_TX_FINISH;
+			}else if(evento == TIMEOUT){
+	  			printf("Error: CTS no activa\n");
+	  			fin = 1;
+			}else{
+	  			printf("ESPERA_CTS: evento no esperado\n");
+			}
+		break;
+      	case ESPERA_TX_FINISH:
 	if(evento == TX_FINISHED){
 	  valor.tv_sec = 1;
 	  valor.tv_usec = 500000;
